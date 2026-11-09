@@ -1546,6 +1546,14 @@ a.sgo{text-decoration:none}
 .abar-on .vswitch--story,.abar-on .vswitch--user{bottom:calc(138px + env(safe-area-inset-bottom,0px))}
 .abar-on .vswitch--parts,.abar-on .vswitch--bg{bottom:calc(188px + env(safe-area-inset-bottom,0px))}
 .abar-on .vswitch--pview{bottom:calc(238px + env(safe-area-inset-bottom,0px))}
+/* v3 (designer, 2026-11-09): the "צורת החיפוש" switch is off the prototype (hidden, always "שדה אחד"), so the in-page switches
+   each move down one place into its spot */
+.vswitch--user{bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.vswitch--bg,.vswitch--parts{bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+.vswitch--pview{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+.abar-on .vswitch--user{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+.abar-on .vswitch--bg,.abar-on .vswitch--parts{bottom:calc(138px + env(safe-area-inset-bottom,0px))}
+.abar-on .vswitch--pview{bottom:calc(188px + env(safe-area-inset-bottom,0px))}
 @media (prefers-reduced-motion:reduce){ .sbg__light i{animation:none} .sbg__photo i{animation:none} .sbg__photo i:first-child{opacity:1} }
 
 /* ---- v3 signed in: the booking card as on the live site (OrderCard / HotelCard / DateBadge and the shared tailwind tokens):
@@ -1865,7 +1873,7 @@ a.sgo{text-decoration:none}
   <div class="vswitch vswitch--bg" id="bgSwitch" role="group" aria-label="רקע עליון"><button type="button" data-bg="photo">יעדים</button><button type="button" data-bg="clouds">עננים</button><button type="button" data-bg="light">אור נע</button></div>
   <div class="vswitch vswitch--user" id="userSwitch" role="group" aria-label="משתמש"><button type="button" data-user="guest">לא מחובר</button><button type="button" data-user="member">מחובר</button></div>
   <div class="vswitch vswitch--story" id="storySwitch" role="group" aria-label="הנרטיב"><button type="button" data-story="dreams">חלומות בנקודות</button><button type="button" data-story="sol">סול הסוכנת</button></div>
-  <div class="vswitch vswitch--search" id="sswitch" role="group" aria-label="צורת החיפוש"><button type="button" data-search="field">שדה אחד</button><button type="button" data-search="bar">שורת AI</button></div><!-- v3 (designer, 2026-11-09): only these two; the open form and Sol's chat versions stay in code -->
+  <div class="vswitch vswitch--search" id="sswitch" hidden role="group" aria-label="צורת החיפוש"><button type="button" data-search="field">שדה אחד</button><button type="button" data-search="bar">שורת AI</button></div><!-- v3 (designer, 2026-11-09): only these two; the open form and Sol's chat versions stay in code -->
   <div class="sheet" id="sheet" aria-hidden="true">
     <div class="sheet__panel" id="sheetPanel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" tabindex="-1"></div>
   </div>
@@ -2964,7 +2972,8 @@ a.sgo{text-decoration:none}
      A prototype control, remembered between visits */
   const sswitch = $('#sswitch');
   let SEARCH = 'field';
-  try { const v = localStorage.getItem('flyall-search'); if (v === 'bar') SEARCH = v;   /* v3: a remembered open form or Sol's chat falls back to one field */ } catch (e) {}
+  // v3 (designer, 2026-11-09): the "צורת החיפוש" switch is gone, so the page is always "שדה אחד" and the remembered choice is no longer read
+  // try { const v = localStorage.getItem('flyall-search'); if (v === 'bar') SEARCH = v; } catch (e) {}
   const applySearch = () => {
     field.hidden = SEARCH === 'form'; $('#sform').hidden = SEARCH !== 'form';
     document.body.dataset.search = SEARCH;
