@@ -1271,6 +1271,12 @@ button.xp{padding:0;border:0;font:inherit;text-align:start;cursor:pointer}
   -webkit-backdrop-filter:var(--v2-blur);backdrop-filter:var(--v2-blur);border-bottom:1px solid rgba(255,255,255,.7);box-shadow:0 8px 20px rgba(14,22,38,.06);
   opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .25s ease,transform .25s ease}
 .stabs.is-on{opacity:1;transform:none;pointer-events:auto}
+/* v3 (designer, 2026-11-09): in the "שדה אחד" search too, Sol's AI bar rises at the bottom once the tabs pin to the top, and
+   leaves with them. (In "שורת AI" it is pinned for the whole page, as before) */
+body:not([data-search="bar"]) .abar{display:block;opacity:0;transform:translateY(24px);visibility:hidden;transition:opacity .25s ease,transform .3s var(--ease),visibility 0s .3s}
+body.abar-on:not([data-search="bar"]) .abar{opacity:1;transform:none;visibility:visible;transition:opacity .25s ease,transform .3s var(--ease),visibility 0s}
+.abar-on .toast{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.abar-on .foot{padding-bottom:calc(124px + env(safe-area-inset-bottom,0px))}
 .stabs__in{display:flex;gap:2px;padding:4px;border-radius:20px;background:rgba(14,22,38,.04);overflow-x:auto;scrollbar-width:none}
 .stabs__in::-webkit-scrollbar{display:none}
 .stabs .tab{flex:none;padding:8px 12px;border-radius:16px;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;color:var(--v2-ink-2)}
@@ -1535,6 +1541,11 @@ a.sgo{text-decoration:none}
   background:linear-gradient(180deg,rgba(245,247,250,.42) 0%,rgba(245,247,250,.6) 34%,rgba(245,247,250,.66) 60%,rgba(245,247,250,.92) 84%,var(--v2-page) 100%)}
 .vswitch--bg{bottom:calc(112px + env(safe-area-inset-bottom,0px))}   /* inside the page (narrow windows): above the user switch */
 [data-search="bar"] .vswitch--bg{bottom:calc(188px + env(safe-area-inset-bottom,0px))}
+/* with Sol's bar up in "שדה אחד" (v3), the in-page switches rise above it as they do in "שורת AI" */
+.abar-on .vswitch{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+.abar-on .vswitch--story,.abar-on .vswitch--user{bottom:calc(138px + env(safe-area-inset-bottom,0px))}
+.abar-on .vswitch--parts,.abar-on .vswitch--bg{bottom:calc(188px + env(safe-area-inset-bottom,0px))}
+.abar-on .vswitch--pview{bottom:calc(238px + env(safe-area-inset-bottom,0px))}
 @media (prefers-reduced-motion:reduce){ .sbg__light i{animation:none} .sbg__photo i{animation:none} .sbg__photo i:first-child{opacity:1} }
 
 /* ---- v3 signed in: the booking card as on the live site (OrderCard / HotelCard / DateBadge and the shared tailwind tokens):
@@ -2925,7 +2936,7 @@ a.sgo{text-decoration:none}
     .map(t => `<button type="button" class="tab" role="tab" data-tab="${t.dataset.tab}" aria-selected="${t.getAttribute('aria-selected')}">${t.innerHTML}</button>`).join('')}</div>`;
   document.querySelector('.hdr').after(stabs);
   stabs.addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; selectProduct(b.dataset.tab); openSearch(); });
-  const stabsOn = () => stabs.classList.toggle('is-on', document.querySelector('.sbox').getBoundingClientRect().bottom < 64);
+  const stabsOn = () => { const on = document.querySelector('.sbox').getBoundingClientRect().bottom < 64; stabs.classList.toggle('is-on', on); document.body.classList.toggle('abar-on', on); };   // Sol's AI bar comes up at the bottom with the strip (v3)
   addEventListener('scroll', stabsOn, { passive: true }); stabsOn();
   $('#sformSol').addEventListener('click', () => window.openSolChat());   // the open form's "שאל את סול"
   formBox.addEventListener('click', e => {
@@ -3217,7 +3228,7 @@ a.sgo{text-decoration:none}
   const HINTS = ['שאלו את סול על החופשה הבאה', 'סוף שבוע רומנטי באירופה?', 'לאן טסים עם ילדים בחנוכה?', 'מה אפשר לקבל ב־8,000 נקודות?'];
   let hint = 0;
   if (!reduced) setInterval(() => {
-    if (document.body.dataset.search !== 'bar' || bin.value || document.activeElement === bin) return;
+    if ((document.body.dataset.search !== 'bar' && !document.body.classList.contains('abar-on')) || bin.value || document.activeElement === bin) return;
     bin.classList.add('is-swap');
     setTimeout(() => { hint = (hint + 1) % HINTS.length; bin.placeholder = HINTS[hint]; bin.classList.remove('is-swap'); }, 250);
   }, 3500);
