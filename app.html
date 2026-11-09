@@ -1562,6 +1562,9 @@ a.sgo{text-decoration:none}
 .abar-on .vswitch--user{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
 .abar-on .vswitch--bg,.abar-on .vswitch--parts{bottom:calc(138px + env(safe-area-inset-bottom,0px))}
 .abar-on .vswitch--pview{bottom:calc(188px + env(safe-area-inset-bottom,0px))}
+[data-abar="off"]:not([data-search="bar"]) .abar{display:none}   /* "ללא שורה" */
+.vswitch--abar{bottom:calc(112px + env(safe-area-inset-bottom,0px))}   /* inside the page: above the background / partners switch */
+.abar-on .vswitch--abar{bottom:calc(188px + env(safe-area-inset-bottom,0px))}
 @media (prefers-reduced-motion:reduce){ .sbg__light i{animation:none} .sbg__photo i{animation:none} .sbg__photo i:first-child{opacity:1} }
 
 /* ---- v3 signed in: the booking card as on the live site (OrderCard / HotelCard / DateBadge and the shared tailwind tokens):
@@ -1878,6 +1881,8 @@ a.sgo{text-decoration:none}
   <div class="vswitch vswitch--parts vswitch--pview is-off" id="partView" hidden role="group" aria-label="תצוגת המוצרים"><button type="button" data-view="grid">קוביות</button><button type="button" data-view="rail">קרוסלה</button></div>
   <div class="vswitch vswitch--parts is-off" id="partSwitch" role="group" aria-label="כמה שיתופי פעולה"><button type="button" data-n="1">מוצר 1</button><button type="button" data-n="2">2</button><button type="button" data-n="3">3</button><button type="button" data-n="4">4</button></div>
   <div class="vswitch vswitch--bg" id="bgSwitch" role="group" aria-label="רקע עליון"><button type="button" data-bg="photo">יעדים</button><button type="button" data-bg="clouds">עננים</button><button type="button" data-bg="light">אור נע</button></div>
+  <!-- v3 (designer, 2026-11-09): a prototype state for Sol's AI bar: with it (it rises with the pinned tabs) or without it -->
+  <div class="vswitch vswitch--abar" id="abarSwitch" role="group" aria-label="שורת AI של סול"><button type="button" data-abar="on">עם שורה</button><button type="button" data-abar="off">ללא שורה</button></div>
   <div class="vswitch vswitch--user" id="userSwitch" role="group" aria-label="משתמש"><button type="button" data-user="guest">לא מחובר</button><button type="button" data-user="member">מחובר</button></div>
   <div class="vswitch vswitch--story" id="storySwitch" role="group" aria-label="הנרטיב"><button type="button" data-story="dreams">חלומות בנקודות</button><button type="button" data-story="sol">סול הסוכנת</button></div>
   <div class="vswitch vswitch--search" id="sswitch" hidden role="group" aria-label="צורת החיפוש"><button type="button" data-search="field">שדה אחד</button><button type="button" data-search="bar">שורת AI</button></div><!-- v3 (designer, 2026-11-09): only these two; the open form and Sol's chat versions stay in code -->
@@ -2950,7 +2955,7 @@ a.sgo{text-decoration:none}
     .map(t => `<button type="button" class="tab" role="tab" data-tab="${t.dataset.tab}" aria-selected="${t.getAttribute('aria-selected')}">${t.innerHTML}</button>`).join('')}</div>`;
   document.querySelector('.hdr').after(stabs);
   stabs.addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; selectProduct(b.dataset.tab); openSearch(); });
-  const stabsOn = () => { const on = document.querySelector('.sbox').getBoundingClientRect().bottom < 64; stabs.classList.toggle('is-on', on); document.body.classList.toggle('abar-on', on); };   // Sol's AI bar comes up at the bottom with the strip (v3)
+  const stabsOn = () => { const on = document.querySelector('.sbox').getBoundingClientRect().bottom < 64; stabs.classList.toggle('is-on', on); document.body.classList.toggle('abar-on', on && document.body.dataset.abar !== 'off'); };   // Sol's AI bar comes up at the bottom with the strip (v3)
   addEventListener('scroll', stabsOn, { passive: true }); stabsOn();
   $('#sformSol').addEventListener('click', () => window.openSolChat());   // the open form's "שאל את סול"
   formBox.addEventListener('click', e => {
@@ -3596,6 +3601,14 @@ document.querySelector('.foot').addEventListener('click', e => { if (e.target.cl
   new ResizeObserver(fitPhoto).observe(document.getElementById('search'));
   new ResizeObserver(fitPhoto).observe(sbox);
   fitPhoto();
+
+  /* v3: Sol's AI bar, with or without (remembered like the others; with by default) */
+  const abSw = document.getElementById('abarSwitch');
+  let AB = 'on';
+  try { if (localStorage.getItem('flyall-abar') === 'off') AB = 'off'; } catch (e) {}
+  const applyAb = () => { document.body.dataset.abar = AB; abSw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.abar === AB)); dispatchEvent(new Event('scroll')); };
+  abSw.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.dataset.abar === AB) return; AB = b.dataset.abar; applyAb(); try { localStorage.setItem('flyall-abar', AB); } catch (err) {} });
+  applyAb();
 
   const sw = document.getElementById('userSwitch');
   let USER = 'guest';
