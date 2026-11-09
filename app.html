@@ -1501,6 +1501,9 @@ a.sgo{text-decoration:none}
 .solintro__ring::before,.hl__r::before{content:none}
 .solintro__ring img{width:104px;height:104px}
 .hl__r img{width:64px;height:64px}
+/* a thin glassy stroke around Sol's story and the highlights (designer, 2026-11-09): white glass, edged with a faint grey so it
+   still reads on the light page */
+.solintro__ring img,.hl__r img{box-shadow:0 0 0 2px rgba(255,255,255,.7),0 0 0 3px rgba(14,22,38,.08)}
 .sbox__edge{position:absolute;inset:0;border-radius:30px;padding:1.5px;background:var(--v2-grad);pointer-events:none;
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 
