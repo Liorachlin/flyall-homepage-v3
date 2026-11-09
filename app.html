@@ -1495,6 +1495,14 @@ a.sgo{text-decoration:none}
 .hl__t{max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font:500 13px/1.1 var(--ds-font)}
 .hl__b:focus-visible{outline:none}
 .hl__b:focus-visible .hl__r{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--v2-violet)}
+/* v3 (designer, 2026-11-09): no gradient ring around Sol's story or the highlights; the photo fills the circle the ring took,
+   so they keep their size. The gradient moves to a thin line around the search box instead */
+.solintro__ring,.solintro__ring.is-seen,.hl__r,.hl__b.is-seen .hl__r{background:none}
+.solintro__ring::before,.hl__r::before{content:none}
+.solintro__ring img{width:104px;height:104px}
+.hl__r img{width:64px;height:64px}
+.sbox__edge{position:absolute;inset:0;border-radius:30px;padding:1.5px;background:var(--v2-grad);pointer-events:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 
 /* ---- v3 (designer, 2026-11-09): Sol's box in the search drawer one tone down, so the fields above lead. The colour stays, just
    quieter: half the tint, no shadow, smaller type and chips, and a chosen chip a soft tint with a violet ring instead of the full
@@ -1658,6 +1666,7 @@ a.sgo{text-decoration:none}
       </ul>
     </div>
     <div class="sbox">
+      <span class="sbox__edge" aria-hidden="true"></span>
       <!-- a new tab is one more button here and one more entry in PRODUCTS -->
       <div class="tabs" role="tablist" aria-label="מה מחפשים">
         <button type="button" class="tab" role="tab" data-tab="hotels" aria-selected="true">
