@@ -2822,7 +2822,6 @@ a.sgo{text-decoration:none}
   }
   function hotelHTML(h) {
     const x = HX[h.n], d = dest(SR.dest), top = ranked().slice(0, 3), mine = top.find(o => o.h === h), rs = ROOMS(h), pick = roomPick(h, rs);
-    const tiles = [['מיקום', x.walk, 'כמה רחוק מהמרכז?'], ['ארוחת בוקר', h.bf ? 'כלולה' : 'לא כלולה', 'מה עם ארוחת בוקר?'], ['בריכה', pool(h) ? 'יש' : 'אין', 'יש בריכה?'], ['חניה', x.park ? 'בתשלום' : 'אין', 'יש חניה?']];
     const amen = ['Wi-Fi חינם', 'מיזוג אוויר', 'קבלה 24/7', ...(h.bf ? ['ארוחת בוקר'] : []), ...(pool(h) ? ['בריכה וספא'] : []), ...(x.park ? ['חניה בתשלום'] : []), 'שירות חדרים', 'כספת בחדר'];
     return `<div class="hp__top"><button type="button" class="res__back" data-hp="back" aria-label="חזרה לתוצאות"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><b>כל המלונות ב${esc(d.name)}</b></div>
       <div class="hp__in">
@@ -2835,9 +2834,9 @@ a.sgo{text-decoration:none}
           <div class="hpsolh__h">${ORB}<div><h2 id="hpSolT">סול על המלון</h2><small>תקציר מתיאור המלון ומ־${nf(h.rv)} ביקורות</small></div></div>
           <p class="hpsolh__lead">${esc(x.blurb)}</p>
           <div class="hpsolh__fit"><span>מתאים במיוחד ל:</span>${x.fitFor.map(c => `<b>${c}</b>`).join('')}</div>
-          <div class="hpsolh__tiles">${tiles.map(([k, v, q]) => `<button type="button" class="hptile" data-hq="about" data-q="${esc(q)}"><small>${k}</small><b>${esc(v)}</b></button>`).join('')}</div>
+          <!-- the four fact tiles were removed (designer, 2026-11-09) -->
           <p class="hpsolh__cav"><b>שווה לדעת.</b> ${esc(x.cav)}</p>
-          <p class="hpsolh__you"><b>בשבילכם (${esc(fmtWho())}, ${fmtDates()}):</b> ${h.bf ? 'ארוחת בוקר כלולה' : 'בלי ארוחת בוקר'} · ${h.fc ? 'ביטול חינם' : 'ללא ביטול חינם'}. <button type="button" class="hp__link" data-hp="rooms">החדר שהייתי בוחרת: ${pick.name} ↓</button></p>
+          <!-- the "בשבילכם" line (with the link to Sol's room) was removed (designer, 2026-11-09) -->
           <div class="hpchat"><div class="hpchat__log"><div class="hm">${ORB}<p>יש לכם שאלה על המלון? אפשר לשאול אותי.</p></div>
             <div class="hpchat__thr" id="hqa-about" aria-live="polite">${qaHTML('about')}</div></div>
           <div class="hpchips">${['יש חניה?', 'מתאים לילדים?', 'כמה רחוק מהמרכז?'].map(c => `<button type="button" class="hpchip" data-hq="about" data-q="${esc(c)}">${esc(c)}</button>`).join('')}</div>
